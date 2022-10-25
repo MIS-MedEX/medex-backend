@@ -8,7 +8,7 @@ CREATE TABLE Patient (
 CREATE TABLE Image (
     ImageID int NOT NULL,
     PatientID int NOT NULL,
-    ImageDate date NOT NULL,
+    ImageDate datetime NOT NULL,
     AiType varchar(50) NOT NULL,
     ImagePath varchar(50) NOT NULL,
     Report varchar(100) NOT NULL,
