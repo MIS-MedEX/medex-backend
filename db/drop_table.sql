@@ -1,0 +1,2 @@
+DROP TABLE Image;
+DROP TABLE Patient;
