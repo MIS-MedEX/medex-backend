@@ -1,18 +1,19 @@
 CREATE TABLE Patient (
-    PatientID int NOT NULL,
-    PatientName varchar(50) NOT NULL,
-    PatientSex varchar(50) NOT NULL,
-    PatientBirthdate date NOT NULL,
-    PRIMARY KEY (PatientID)
+    ID int NOT NULL,
+    Name varchar(50) NOT NULL,
+    Sex varchar(50) NOT NULL,
+    Birthdate date NOT NULL,
+    PRIMARY KEY (ID)
 );
 CREATE TABLE Image (
-    ImageID int NOT NULL,
+    ID int NOT NULL,
     PatientID int NOT NULL,
-    ImageDate datetime NOT NULL,
+    Date datetime NOT NULL,
     AIType varchar(50),
-    ImagePath varchar(50) NOT NULL,
-    Report varchar(100) NOT NULL,
+    Path varchar(50) NOT NULL,
+    Keyword varchar(50),
+    Report TEXT,
     Finish boolean NOT NULL,
-    PRIMARY KEY (ImageID),
-    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+    PRIMARY KEY (ID),
+    FOREIGN KEY (PatientID) REFERENCES Patient(ID)
 );
