@@ -1,0 +1,1 @@
+INSERT INTO Image(ImageID, PatientID, ImageDate, AIType, ) VALUES (1, 'AXEL');
