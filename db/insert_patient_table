@@ -1,2 +1,2 @@
 INSERT INTO Patient(ID, Name, Birthdate, Sex) 
-VALUES (1, 'AXEL', 'Male', 2022-10-31);
+VALUES (1, 'AXEL',  '2011-9-31', 'Male');
