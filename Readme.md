@@ -10,4 +10,5 @@ response:
     "sex": int
 }
 ```
+![Postman測試](API1_test.png)
  
