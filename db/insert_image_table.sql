@@ -1,1 +1,1 @@
-INSERT INTO Image(ImageID, PatientID, ImageDate, AIType, ) VALUES (1, 'AXEL');
+INSERT INTO Image(ID, PatientID, Date, Path,Finish) VALUES (1, 1, '2022-10-31 02:13:24', 'C:\Users\CGVMISLAB\Downloads\Test.png', False);
