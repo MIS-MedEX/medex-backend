@@ -20,7 +20,7 @@ response:
 ]
 ```
 
-![Postman測試](API2_test.png)
+![Postman測試](API1_test.png)
 
 # API2
 
