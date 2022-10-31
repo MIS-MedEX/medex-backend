@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from connectdb import *
 from parse import *
+from model.inference import *
 
 app = Flask(__name__)
 CORS(app)
@@ -31,14 +32,19 @@ def get_patient(id):
     return jsonify(patient_data)
 
 
-@app.route("/api/patient/<id>/images", methods=["GET"])
+@app.route("/api/patient/<id>/image", methods=["GET"])
 def get_images(id):
     patient_id = id
     date = request.args.get('date')
     type = request.args.get('type')
     image_type, time = parse_get_images_str(type)
-    image_rows = db.sql_fetch_images(patient_id, date, time)
-    res = parse_img_rows(image_rows)
+    image_row = db.sql_fetch_images(patient_id, date, time)
+    res = parse_img_rows(image_row)
+    cardio_task_pred, pneumo_task_pred, pleural_task_pred = validate(
+        res["img_org_path"])
+    res["img_vis_cardio"] = {"prob": float(cardio_task_pred)}
+    res["img_vis_pneumo"] = {"prob": float(pneumo_task_pred)}
+    res["img_vis_pleural"] = {"prob": float(pleural_task_pred)}
     return jsonify(res)
 
 

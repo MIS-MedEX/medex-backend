@@ -42,21 +42,21 @@ response:
 # API3
 
 ```
-route: /api/patient/<id>/images
+route: /api/patient/<id>/image
 request: id, date, type
 response:
 {
     "img_org_path":str,
     "img_vis_cardio":{
-        probability:float,
+        prob:float,
         path:str
     },
-    "img_vis_pneumonia":{
-        probability:float,
+    "img_vis_pneumo":{
+        prob:float,
         path:str
     },
     "img_vis_pleural":{
-        probability:float,
+        prob:float,
         path:str
     }
 }
