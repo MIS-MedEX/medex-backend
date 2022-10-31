@@ -1,0 +1,5 @@
+Flask
+torch
+sqlite3
+opencv
+numpy
