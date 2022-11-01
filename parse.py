@@ -40,5 +40,17 @@ def parse_get_images_str(type):
 
 def parse_img_rows(img_rows):
     res = {}
-    res["img_org_path"] = img_rows[0][1]
+    res["img_org_path"] = img_rows[0][4]
     return res
+
+
+def parse_label(img_rows):
+    cardio = img_rows[0][1]
+    pneumo = img_rows[0][2]
+    pleural = img_rows[0][3]
+    if cardio == 1:
+        return "cardio"
+    elif pneumo == 1:
+        return "pneumonia"
+    elif pleural == 1:
+        return "pleural"

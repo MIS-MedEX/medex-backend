@@ -46,19 +46,29 @@ route: /api/patient/<id>/image
 request: id, date, type
 response:
 {
+    "img_label":str,
     "img_org_path":str,
-    "img_vis_cardio":{
+    "res_our_cardio":{
         prob:float,
         path:str
     },
-    "img_vis_pneumo":{
+    "res_our_pneumo":{
         prob:float,
         path:str
     },
-    "img_vis_pleural":{
+    "res_our_pleural":{
         prob:float,
         path:str
-    }
+    },
+    "res_baseline_cardio":{
+        prob:float
+    },
+    "res_baseline_pneumo":{
+        prob:float
+    },
+    "res_baseline_pleural":{
+        prob:float
+    },
 }
 ```
 

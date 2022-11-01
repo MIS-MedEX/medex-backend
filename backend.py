@@ -34,17 +34,26 @@ def get_patient(id):
 
 @app.route("/api/patient/<id>/image", methods=["GET"])
 def get_images(id):
+
     patient_id = id
     date = request.args.get('date')
     type = request.args.get('type')
     image_type, time = parse_get_images_str(type)
-    image_row = db.sql_fetch_images(patient_id, date, time)
-    res = parse_img_rows(image_row)
+    image_rows = db.sql_fetch_images(patient_id, date, time)
+    label = parse_label(image_rows)
+    res = parse_img_rows(image_rows)
     cardio_task_pred, pneumo_task_pred, pleural_task_pred = validate(
         res["img_org_path"])
-    res["img_vis_cardio"] = {"prob": float(cardio_task_pred)}
-    res["img_vis_pneumo"] = {"prob": float(pneumo_task_pred)}
-    res["img_vis_pleural"] = {"prob": float(pleural_task_pred)}
+    res["res_our_cardio"] = {"prob": float(cardio_task_pred),
+                             "vis_path": "none"}
+    res["res_our_pneumo"] = {"prob": float(pneumo_task_pred),
+                             "vis_path": "none"}
+    res["res_our_pleural"] = {"prob": float(pleural_task_pred),
+                              "vis_path": "none"}
+    # res["res_baseline_cardio"] = {"prob": float(cardio_task_pred)}
+    # res["res_baseline_pneumo"] = {"prob": float(pneumo_task_pred)}
+    # res["res_baseline_pleural"] = {"prob": float(pleural_task_pred)}
+    res["img_label"] = label
     return jsonify(res)
 
 

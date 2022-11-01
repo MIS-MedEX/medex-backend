@@ -27,7 +27,7 @@ class Database:
     def sql_fetch_images(self, patient_id, date, time):
         print(patient_id, date, time)
         self.cursorObj.execute(
-            'SELECT ID, Path FROM Image WHERE (PatientID=? AND datetime(Date)=?)', (patient_id, date+" "+time))
+            'SELECT ID, Cardio, Pneumo, Pleural, Path FROM Image WHERE (PatientID=? AND datetime(Date)=?)', (patient_id, date+" "+time))
         rows = self.cursorObj.fetchall()
         self.con.commit()
         for row in rows:
