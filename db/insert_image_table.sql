@@ -1,1 +1,1 @@
-INSERT INTO Image(ID, PatientID, Date, Path,Finish) VALUES (1, 1, '2022-10-31 02:13:24', 'C:\Users\CGVMISLAB\Downloads\Test.png', False);
+INSERT INTO Image(ID, PatientID, Date, Path, Cardio, Pneumo, Pleural,Finish) VALUES (1, 1, '2022-10-31 02:13:24', 'C:\medex-backend\db\img\test.jpg', 0,1,0,False);
