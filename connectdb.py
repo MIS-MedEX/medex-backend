@@ -1,5 +1,7 @@
 import sqlite3
 
+from cv2 import sort
+
 
 class Database:
     def __init__(self):
@@ -23,6 +25,16 @@ class Database:
         for row in rows:
             print(row)
         return rows
+
+    def sql_fetch_distinct_date(self, patient_id):
+        date_list = []
+        self.cursorObj.execute(
+            'SELECT distinct(date(Date)) FROM Image WHERE PatientID={} ORDER BY Date;'.format(patient_id))
+        rows = self.cursorObj.fetchall()
+        self.con.commit()
+        for row in rows:
+            date_list.append(row[0])
+        return date_list
 
     def sql_fetch_images(self, patient_id, date, time):
         print(patient_id, date, time)

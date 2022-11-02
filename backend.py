@@ -28,7 +28,8 @@ def get_patient_list():
 def get_patient(id):
     patient_id = id
     patient_rows = db.sql_fetch_patient(patient_id)
-    patient_data = parse_patient(patient_rows)
+    date_list = db.sql_fetch_distinct_date(patient_id)
+    patient_data = parse_patient(patient_rows, date_list)
     return jsonify(patient_data)
 
 

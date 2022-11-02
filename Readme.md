@@ -30,7 +30,10 @@ request: id
 response:
 {
     "age": int,
-    "date": [{date:[time, time, ...], date:[time, time, ...]}]
+    "date": [
+        {date:[time, time, ...]},
+        {date:[time, time, ...]},
+        {date:[time, time, ...]}]
     "name": str,
     "id": int,
     "sex": int
