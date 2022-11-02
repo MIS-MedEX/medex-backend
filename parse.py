@@ -13,22 +13,39 @@ def parse_patient_list(patient_rows):
     return patient_list
 
 
-def parse_patient(patient_rows):
+# def parse_patient(patient_rows):
+#     patient = {}
+#     patient['id'] = patient_rows[0][0]
+#     patient['name'] = patient_rows[0][1]
+#     patient['sex'] = patient_rows[0][2]
+#     patient['age'] = age(patient_rows[0][3])
+#     date_list = []
+#     temp = {}
+#     for row in patient_rows:
+#         date = row[4].split(' ')[0]
+#         if date not in temp.keys():
+#             temp[date] = []
+#         time = row[4].split(' ')[1]
+#         temp[date].append(time)
+#     date_list.append(temp)
+#     patient['date'] = date_list
+#     return patient
+
+def parse_patient(patient_rows, date_list):
     patient = {}
     patient['id'] = patient_rows[0][0]
     patient['name'] = patient_rows[0][1]
     patient['sex'] = patient_rows[0][2]
     patient['age'] = age(patient_rows[0][3])
-    date_list = []
-    temp = {}
+    date_value = []
+    for date in date_list:
+        temp = {"{}".format(date): []}
+        date_value.append(temp)
     for row in patient_rows:
         date = row[4].split(' ')[0]
-        if date not in temp.keys():
-            temp[date] = []
         time = row[4].split(' ')[1]
-        temp[date].append(time)
-    date_list.append(temp)
-    patient['date'] = date_list
+        date_value[date_list.index(date)][date].append(time)
+    patient['date'] = date_value
     return patient
 
 
