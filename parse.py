@@ -58,6 +58,7 @@ def parse_get_images_str(type):
 def parse_img_rows(img_rows):
     res = {}
     res["img_org_path"] = img_rows[0][4]
+    res["report"] = img_rows[0][5]
     return res
 
 
