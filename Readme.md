@@ -76,4 +76,4 @@ response:
 }
 ```
 
-<!--![Postman測試](API1_test.png)-->
+![Postman測試](API3_test.png)
