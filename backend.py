@@ -43,14 +43,14 @@ def get_images(id):
     image_rows = db.sql_fetch_images(patient_id, date, time)
     label = parse_label(image_rows)
     res = parse_img_rows(image_rows)
-    cardio_task_pred, pneumo_task_pred, pleural_task_pred = validate(
+    cardio_task_pred, pneumo_task_pred, pleural_task_pred, cardio_vis_path, pneumonia_vis_path, pleural_vis_path = validate(
         res["img_org_path"])
     res["res_our_cardio"] = {"prob": float(cardio_task_pred),
-                             "vis_path": "none"}
+                             "vis_path": cardio_vis_path}
     res["res_our_pneumo"] = {"prob": float(pneumo_task_pred),
-                             "vis_path": "none"}
+                             "vis_path": pneumonia_vis_path}
     res["res_our_pleural"] = {"prob": float(pleural_task_pred),
-                              "vis_path": "none"}
+                              "vis_path": pleural_vis_path}
     # res["res_baseline_cardio"] = {"prob": float(cardio_task_pred)}
     # res["res_baseline_pneumo"] = {"prob": float(pneumo_task_pred)}
     # res["res_baseline_pleural"] = {"prob": float(pleural_task_pred)}

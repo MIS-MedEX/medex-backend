@@ -49,8 +49,9 @@ route: /api/patient/<id>/image
 request: id, date, type
 response:
 {
-    "img_label":str,
-    "img_org_path":str,
+    "img_label": str,
+    "img_org_path": str,
+    "report": str
     "res_our_cardio":{
         prob:float,
         path:str
@@ -75,4 +76,4 @@ response:
 }
 ```
 
-<!--![Postman測試](API1_test.png)-->
+![Postman測試](API3_test.png)

@@ -9,6 +9,11 @@ import time
 
 pretrain_mask_weight = [os.path.join(os.path.dirname(__file__), "weights", "cardiomegaly.pt"),
                         os.path.join(os.path.dirname(__file__), "weights", "pneumonia.pt"), os.path.join(os.path.dirname(__file__), "weights", "pleural_effusion.pt")]
+pretrain_vis_mask_weight = {
+    "cardiomegaly": os.path.join(os.path.dirname(__file__), "weights", "Cardiomegaly_epoch_2.pt"),
+    "pneumonia": os.path.join(os.path.dirname(__file__), "weights", "Pneumonia_epoch_5.pt"),
+    "pleural_effusion": os.path.join(os.path.dirname(__file__), "weights", "Pleural_effusion_epoch_3.pt")
+}
 pretrain_gender_weight = os.path.join(
     os.path.dirname(__file__), "weights", "gender_weight.pt")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -19,12 +24,21 @@ Pneumonia_Autoencoder = models.Combined_to_oneNet(
     spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes).to(device)
 Pleural_Autoencoder = models.Combined_to_oneNet(
     spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes).to(device)
+Cardio_vis_Autoencoder = models.Autoencoder_new().to(device)
+Pneumonia_vis_Autoencoder = models.Autoencoder_new().to(device)
+Pleural_vis_Autoencoder = models.Autoencoder_new().to(device)
 Cardio_Autoencoder.load_state_dict(torch.load(
     pretrain_mask_weight[0])["autoencoder_state_dict"])
 Pneumonia_Autoencoder.load_state_dict(torch.load(
     pretrain_mask_weight[1])["autoencoder_state_dict"])
 Pleural_Autoencoder.load_state_dict(torch.load(
     pretrain_mask_weight[2])["autoencoder_state_dict"])
+Cardio_vis_Autoencoder.load_state_dict(torch.load(
+    pretrain_vis_mask_weight["cardiomegaly"])["autoencoder_state_dict"])
+Pneumonia_vis_Autoencoder.load_state_dict(torch.load(
+    pretrain_vis_mask_weight["pneumonia"])["autoencoder_state_dict"])
+Pleural_vis_Autoencoder.load_state_dict(torch.load(
+    pretrain_vis_mask_weight["pleural_effusion"])["autoencoder_state_dict"])
 
 
 def preprocess(img_path):
@@ -35,6 +49,22 @@ def preprocess(img_path):
     full_img = torch.from_numpy(full_img.copy()).float()
     full_img = full_img.unsqueeze(0)
     return full_img
+
+
+def postprocess(img_path, mask, mask_type="None"):
+    db_root = r"C:\medex-backend\db"
+    full_img = cv2.imread(img_path)
+    full_img = cv2.resize(full_img, (256, 256))
+    mask = np.uint8((mask.squeeze(0).squeeze(0).cpu().detach()*255))
+    heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET)
+    result = cv2.addWeighted(heatmap, 0.5, full_img, 0.5, 0)
+    if not os.path.exists(os.path.join(db_root, "imgs", "{}".format(img_path.split("\\")[-1].split(".")[0]))):
+        os.makedirs(os.path.join(db_root, "imgs", "{}".format(
+            img_path.split("\\")[-1].split(".")[0])))
+    mask_path = os.path.join(db_root, "imgs", "{}".format(
+        img_path.split("\\")[-1].split(".")[0]), "{}.jpg".format(mask_type))
+    cv2.imwrite(mask_path, result)
+    return mask_path
 
 
 def validate(img_path, masked_img_dir=None):
@@ -54,13 +84,22 @@ def validate(img_path, masked_img_dir=None):
             test_image)
         pleural_task_pred, pleural_adv_pred, pleural_draw_image, pleural_mask = Pleural_Autoencoder(
             test_image)
+        _, cardio_mask = Cardio_vis_Autoencoder(
+            test_image)
+        _, pneumonia_mask = Pneumonia_vis_Autoencoder(
+            test_image)
+        _, pleural_mask = Pleural_vis_Autoencoder(
+            test_image)
+
         cardio_task_pred = torch.squeeze(cardio_task_pred, 1)
         pneumo_task_pred = torch.squeeze(pneumo_task_pred, 1)
         pleural_task_pred = torch.squeeze(pleural_task_pred, 1)
-        print('Finished Validating')
-
+    cardio_vis_path = postprocess(img_path, cardio_mask, "cardio")
+    pneumonia_vis_path = postprocess(img_path, pneumonia_mask, "pneumonia")
+    pleural_vis_path = postprocess(img_path, pleural_mask, "pleural")
+    print('Finished Validating')
     end_time = time.time()
     duration = end_time - start_time
     print(duration)
 
-    return cardio_task_pred, pneumo_task_pred, pleural_task_pred
+    return cardio_task_pred, pneumo_task_pred, pleural_task_pred, cardio_vis_path, pneumonia_vis_path, pleural_vis_path

@@ -321,3 +321,24 @@ class target_classifier_new(nn.Module):
         preds = self.activation(preds)
 
         return preds
+
+
+class Autoencoder_new(nn.Module):
+    def __init__(self, num_verb=14):
+        super(Autoencoder_new, self).__init__()
+        self.num_verb = num_verb
+        # self.base_network = models.resnet50(pretrained = True)
+
+        norm_layer = 'batch'
+        use_dropout = False
+        norm_layer = get_norm_layer(norm_type=norm_layer)
+        self.autoencoder = mimic_AutoEncoder(3, 64,
+                                             norm_layer=norm_layer, use_dropout=use_dropout)
+
+        output_size = self.num_verb
+        # self.finalLayer = nn.Linear(self.base_network.fc.in_features, output_size)
+
+    def forward(self, image):
+        autoencoded_image, mask, latent = self.autoencoder(image)
+
+        return autoencoded_image, mask
