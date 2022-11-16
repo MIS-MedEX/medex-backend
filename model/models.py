@@ -260,21 +260,6 @@ class spurious_classifier(nn.Module):
         return output
 
 
-class target_classifier(nn.Module):
-    def __init__(self, oc=14):
-        super(target_classifier, self).__init__()
-        self.classifier = models.resnet50(pretrained=True)
-        self.classifier.fc = nn.Linear(
-            in_features=2048, out_features=oc, bias=True)
-        self.activation = nn.Sigmoid()
-
-    def forward(self, x):
-        x = self.classifier(x)
-        output = self.activation(x)
-
-        return output
-
-
 def get_norm_layer(norm_type='instance'):
     if norm_type == 'batch':
         norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
