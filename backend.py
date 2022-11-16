@@ -3,6 +3,7 @@ from flask_cors import CORS
 from connectdb import *
 from parse import *
 from model.inference import *
+import math
 
 app = Flask(__name__)
 CORS(app)
@@ -43,17 +44,25 @@ def get_images(id):
     image_rows = db.sql_fetch_images(patient_id, date, time)
     label = parse_label(image_rows)
     res = parse_img_rows(image_rows)
-    cardio_task_pred, pneumo_task_pred, pleural_task_pred, cardio_vis_path, pneumonia_vis_path, pleural_vis_path = validate(
-        res["img_org_path"])
-    res["res_our_cardio"] = {"prob": float(cardio_task_pred),
-                             "vis_path": cardio_vis_path}
-    res["res_our_pneumo"] = {"prob": float(pneumo_task_pred),
-                             "vis_path": pneumonia_vis_path}
-    res["res_our_pleural"] = {"prob": float(pleural_task_pred),
-                              "vis_path": pleural_vis_path}
-    # res["res_baseline_cardio"] = {"prob": float(cardio_task_pred)}
-    # res["res_baseline_pneumo"] = {"prob": float(pneumo_task_pred)}
-    # res["res_baseline_pleural"] = {"prob": float(pleural_task_pred)}
+    validate_ret = validate(res["img_org_path"])
+    res["res_our_cardio"] = {"prob": math.floor(float(validate_ret["cardio"]["our"])*100)/100,
+                             "vis_path": validate_ret["cardio"]["vis"],
+                             "error": math.floor(abs(image_rows[0][1]-float(validate_ret["cardio"]["our"]))*100)/100}
+    res["res_our_pneumo"] = {"prob": math.floor(float(validate_ret["pneumonia"]["our"])*100)/100,
+                             "vis_path": validate_ret["pneumonia"]["vis"],
+                             "error": math.floor(abs(image_rows[0][2]-float(validate_ret["pneumonia"]["our"]))*100)/100}
+    res["res_our_pleural"] = {"prob": math.floor(float(validate_ret["pleural"]["our"])*100)/100,
+                              "vis_path": validate_ret["pleural"]["vis"],
+                              "error": math.floor(abs(image_rows[0][3]-float(validate_ret["pleural"]["our"]))*100)/100}
+    res["res_baseline_cardio"] = {
+        "prob": math.floor(float(validate_ret["cardio"]["baseline"])*100)/100,
+        "error": math.floor(abs(image_rows[0][1]-float(validate_ret["cardio"]["baseline"]))*100)/100}
+    res["res_baseline_pneumo"] = {
+        "prob": math.floor(float(validate_ret["pneumonia"]["baseline"])*100)/100,
+        "error": math.floor(abs(image_rows[0][2]-float(validate_ret["pneumonia"]["baseline"]))*100)/100}
+    res["res_baseline_pleural"] = {
+        "prob": math.floor(float(validate_ret["pleural"]["baseline"])*100)/100,
+        "error": math.floor(abs(image_rows[0][3]-float(validate_ret["pleural"]["baseline"]))*100)/100}
     res["img_label"] = label
     return jsonify(res)
 
