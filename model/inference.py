@@ -25,11 +25,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 target_classes = 1
 # our model
 Cardio_Autoencoder = models.Combined_to_oneNet(
-    spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes).to(device)
+    spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes, grad_reverse=False).to(device)
 Pneumonia_Autoencoder = models.Combined_to_oneNet(
-    spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes).to(device)
+    spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes, grad_reverse=False).to(device)
 Pleural_Autoencoder = models.Combined_to_oneNet(
-    spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes).to(device)
+    spurious_weight=pretrain_gender_weight, spurious_oc=2, num_verb=target_classes, grad_reverse=False).to(device)
 # baseline model
 Cardio_baseline = models.target_classifier_new(oc=1).to(device)
 Pneumonia_baseline = models.target_classifier_new(oc=1).to(device)
@@ -99,11 +99,11 @@ def validate(img_path, masked_img_dir=None):
     start_time = time.time()
 
     with torch.no_grad():
-        cardio_task_pred, cardio_adv_pred, cardio_draw_image, cardio_task_mask = Cardio_Autoencoder(
+        cardio_task_pred, cardio_draw_image, cardio_task_mask = Cardio_Autoencoder(
             test_image)
-        pneumo_task_pred, pneum_adv_pred, pneumo_draw_image, pneumo_mask = Pneumonia_Autoencoder(
+        pneumo_task_pred, pneumo_draw_image, pneumo_mask = Pneumonia_Autoencoder(
             test_image)
-        pleural_task_pred, pleural_adv_pred, pleural_draw_image, pleural_mask = Pleural_Autoencoder(
+        pleural_task_pred, pleural_draw_image, pleural_mask = Pleural_Autoencoder(
             test_image)
         _, cardio_mask = Cardio_vis_Autoencoder(
             test_image)
