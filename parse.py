@@ -44,7 +44,7 @@ def parse_patient(patient_rows, date_list):
     for row in patient_rows:
         date = row[4].split(' ')[0]
         time = row[4].split(' ')[1]
-        date_value[date_list.index(date)][date].append("xray-{}".format(time))
+        date_value[date_list.index(date)][date].append("Xray-{}".format(time))
     patient['date'] = date_value
     return patient
 
