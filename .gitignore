@@ -1,2 +1,2 @@
 *.pt
-./db/imgs/*/*.jpg
+db/imgs/*/
