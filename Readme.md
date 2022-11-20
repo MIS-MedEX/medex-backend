@@ -52,9 +52,10 @@ route: /api/patient/<id>/image
 request: id, date, type
 response:
 {
+    "highlight": [str, str, str]/Null,
     "img_label": str,
     "img_org_path": str,
-    "report": str
+    "report": str/Null,
     "res_our_cardio":{
         prob:float,
         path:str
