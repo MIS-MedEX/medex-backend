@@ -1,6 +1,7 @@
 # API1
 
 ```
+method: GET
 route: /api/patient
 response:
 [
@@ -25,6 +26,7 @@ response:
 # API2
 
 ```
+method: GET
 route: /api/patient/<id>
 request: id
 response:
@@ -45,6 +47,7 @@ response:
 # API3
 
 ```
+method: GET
 route: /api/patient/<id>/image
 request: id, date, type
 response:
@@ -77,3 +80,24 @@ response:
 ```
 
 ![Postman測試](API3_test.png)
+
+# API4
+
+```
+method: POST
+route: /api/patient/<id>/save_report
+request:
+{
+    "id": int,
+    "date": str,
+    "type": str,
+    "report": str,
+    "highlight": [str, str, str]
+}
+response:
+{
+    "status":success/fail
+}
+```
+
+![Postman測試](API4_test.png)

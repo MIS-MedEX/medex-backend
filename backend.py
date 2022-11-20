@@ -67,5 +67,20 @@ def get_images(id):
     return jsonify(res)
 
 
+@app.route("/api/patient/save_report", methods=["POST"])
+def save_report():
+    data = request.get_json()
+    patient_id = data["id"]
+    date = data["date"]
+    type = data["type"]
+    image_type, time = parse_get_images_str(type)
+    report = data["report"]
+    highlight = data["highlight"]  # ["str", "str", "str"]
+    highlight = parse_highlight(highlight)
+    status = db.sql_update_report(patient_id, report, highlight, date, time)
+    return jsonify({"status": status})
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=True)
