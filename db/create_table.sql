@@ -14,7 +14,7 @@ CREATE TABLE Image (
     Pneumo int,
     Pleural int,
     Path varchar(50) NOT NULL,
-    Keyword varchar(50),
+    Keyword TEXT,
     Report TEXT,
     Finish boolean NOT NULL,
     PRIMARY KEY (ID),

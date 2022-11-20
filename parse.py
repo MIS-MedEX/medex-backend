@@ -72,3 +72,11 @@ def parse_label(img_rows):
         return "pneumonia"
     elif pleural == 1:
         return "pleural"
+
+
+def parse_highlight(highlight):
+    '''
+    :param highlight: list of highlight
+    '''
+    highlight = "--".join(highlight)
+    return highlight

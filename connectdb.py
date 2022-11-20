@@ -10,7 +10,7 @@ class Database:
 
     def sql_fetch_patient_list(self):
         self.cursorObj.execute(
-            'SELECT ID, Name, Sex, Birthdate FROM Patient')
+            'SELECT ID, Name, Sex, Birthdate FROM Patient;')
         rows = self.cursorObj.fetchall()
         self.con.commit()
         for row in rows:
@@ -19,7 +19,7 @@ class Database:
 
     def sql_fetch_patient(self, patient_id):
         self.cursorObj.execute(
-            'SELECT Patient.ID, Name, Sex, Birthdate, Date  FROM Patient JOIN Image ON Patient.ID = Image.PatientID WHERE Patient.ID={}'.format(patient_id))
+            'SELECT Patient.ID, Name, Sex, Birthdate, Date  FROM Patient JOIN Image ON Patient.ID = Image.PatientID WHERE Patient.ID={};'.format(patient_id))
         rows = self.cursorObj.fetchall()
         self.con.commit()
         for row in rows:
@@ -39,12 +39,22 @@ class Database:
     def sql_fetch_images(self, patient_id, date, time):
         print(patient_id, date, time)
         self.cursorObj.execute(
-            'SELECT ID, Cardio, Pneumo, Pleural, Path, Report FROM Image WHERE (PatientID=? AND datetime(Date)=?)', (patient_id, date+" "+time))
+            'SELECT ID, Cardio, Pneumo, Pleural, Path, Report FROM Image WHERE (PatientID=? AND datetime(Date)=?);', (patient_id, date+" "+time))
         rows = self.cursorObj.fetchall()
         self.con.commit()
         for row in rows:
             print(row)
         return rows
+
+    def sql_update_report(self, patient_id, report, highlight, date, time):
+        sql = 'UPDATE Image SET Report="{}",Keyword="{}", Finish=1 WHERE (PatientID=? AND datetime(Date)=?);'.format(
+            report, highlight)
+        self.cursorObj.execute(sql, (patient_id, date+" "+time))
+        self.con.commit()
+        if self.cursorObj.rowcount == 1:
+            return "success"
+        else:
+            return "fail"
 
 
 db = Database()
