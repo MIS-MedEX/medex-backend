@@ -86,7 +86,7 @@ response:
 
 ```
 method: POST
-route: /api/patient/<id>/save_report
+route: /api/patient/save_report
 request:
 {
     "id": int,
