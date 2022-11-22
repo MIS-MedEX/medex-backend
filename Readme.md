@@ -32,10 +32,10 @@ request: id
 response:
 {
     "age": int,
-    "date": [
-        {date:[time, time, ...]},
-        {date:[time, time, ...]},
-        {date:[time, time, ...]}]
+    "date": {
+        date:[time, time, ...],
+        date:[time, time, ...],
+        date:[time, time, ...]}
     "name": str,
     "id": int,
     "sex": int
@@ -52,10 +52,10 @@ route: /api/patient/<id>/image
 request: id, date, type
 response:
 {
-    "highlight": [str, str, str]/Null,
+    "highlight": [str, str, str],
     "img_label": str,
     "img_org_path": str,
-    "report": str/Null,
+    "report": str,
     "res_our_cardio":{
         prob:float,
         path:str
