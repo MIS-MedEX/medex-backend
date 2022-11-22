@@ -64,6 +64,8 @@ def get_images(id):
         "prob": math.floor(float(validate_ret["pleural"]["baseline"])*100)/100,
         "error": math.floor(abs(image_rows[0][3]-float(validate_ret["pleural"]["baseline"]))*100)/100}
     res["img_label"] = label
+    res["pred_label"] = parse_pred_label(
+        res["res_our_cardio"]["prob"], res["res_our_pneumo"]["prob"], res["res_our_pleural"]["prob"])
     return jsonify(res)
 
 
