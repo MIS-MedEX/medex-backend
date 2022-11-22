@@ -55,6 +55,7 @@ response:
     "highlight": [str, str, str],
     "img_label": str,
     "img_org_path": str,
+    "pred_label": str/list
     "report": str,
     "res_our_cardio":{
         prob:float,

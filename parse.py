@@ -57,11 +57,28 @@ def parse_label(img_rows):
     pneumo = img_rows[0][2]
     pleural = img_rows[0][3]
     if cardio == 1:
-        return "cardio"
+        return "cardiomegaly"
     elif pneumo == 1:
         return "pneumonia"
     elif pleural == 1:
-        return "pleural"
+        return "pleural effusion"
+
+
+def parse_pred_label(cardio_prob, pneumo_prob, pleural_prob):
+    print(cardio_prob, pneumo_prob, pleural_prob)
+    res = []
+    if cardio_prob > 0.5:
+        res.append("cardiomegaly")
+    if pneumo_prob > 0.5:
+        res.append("pneumonia")
+    if pleural_prob > 0.5:
+        res.append("pleural effusion")
+    if len(res) == 0:
+        return "none"
+    elif len(res) == 1:
+        return res[0]
+    else:
+        return res
 
 
 def parse_highlight(highlight):
