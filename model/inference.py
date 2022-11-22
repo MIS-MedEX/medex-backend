@@ -96,6 +96,12 @@ def validate(img_path, masked_img_dir=None):
     Cardio_Autoencoder.eval()
     Pneumonia_Autoencoder.eval()
     Pleural_Autoencoder.eval()
+    Cardio_baseline.eval()
+    Pneumonia_baseline.eval()
+    Pleural_baseline.eval()
+    Cardio_vis_Autoencoder.eval()
+    Pneumonia_vis_Autoencoder.eval()
+    Pleural_vis_Autoencoder.eval()
     start_time = time.time()
 
     with torch.no_grad():
