@@ -76,6 +76,7 @@ def postprocess(img_path, mask, mask_type="None"):
     db_root = r"C:\medex-backend\db"
     full_img = cv2.imread(img_path)
     full_img = cv2.resize(full_img, (256, 256))
+    mask = (mask-mask.min())/(mask.max()-mask.min())
     mask = np.uint8((mask.squeeze(0).squeeze(0).cpu().detach()*255))
     heatmap = cv2.applyColorMap(mask, cv2.COLORMAP_JET)
     result = cv2.addWeighted(heatmap, 0.5, full_img, 0.5, 0)
