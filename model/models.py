@@ -134,19 +134,6 @@ class mimic_AutoEncoder(nn.Module):
         encoded_image = self.activation(self.upSample_0(
             self.upRelu_0(torch.cat([x_up_1, x_down_0], 1))))  # (3, 224, 224)
 
-        # threshold = int(encoded_image.size(2)*encoded_image.size(3)*0.5)
-
-        # if torch.sum(encoded_image) < threshold:
-        #     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        #     mask = torch.ones((encoded_image.size(0), encoded_image.size(1), encoded_image.size(2), encoded_image.size(3))).to(device)
-        #     for i in range(encoded_image.size(0)):
-        #         _encoded_image = encoded_image.clone()[i].flatten()
-        #         _, indices = torch.topk(_encoded_image, threshold, largest = True)
-        #         _encoded_image[indices] = 0.5
-        #         mask[i] = _encoded_image.reshape(1, encoded_image.size(2), encoded_image.size(3))
-
-        #     return torch.mul(input, mask), mask, latent
-
         return torch.mul(input, encoded_image), encoded_image, latent
 
 

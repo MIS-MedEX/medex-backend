@@ -26,7 +26,6 @@ def parse_patient(patient_rows, date_list):
     for row in patient_rows:
         date = row[4].split(' ')[0]
         time = row[4].split(' ')[1]
-        # date_value[date_list.index(date)][date].append("Xray-{}".format(time))
         date_value[date].append("Xray-{}".format(time))
     patient['date'] = date_value
     return patient
@@ -57,7 +56,7 @@ def parse_label(img_rows):
     pneumo = img_rows[0][2]
     pleural = img_rows[0][3]
     if cardio == 1:
-        return "cardiomegaly"
+        return "Cardiomegaly"
     elif pneumo == 1:
         return "Pneumonia"
     elif pleural == 1:

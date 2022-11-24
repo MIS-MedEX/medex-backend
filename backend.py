@@ -45,14 +45,18 @@ def get_images(id):
     label = parse_label(image_rows)
     res = parse_img_rows(image_rows)
     validate_ret = validate(res["img_org_path"])
+    res["image_base64"] = validate_ret["image_base64"]
     res["res_our_cardio"] = {"prob": math.floor(float(validate_ret["cardio"]["our"])*100)/100,
                              "vis_path": validate_ret["cardio"]["vis"],
+                             "vis_base64": validate_ret["cardio"]["vis_base64"],
                              "error": math.floor(abs(image_rows[0][1]-float(validate_ret["cardio"]["our"]))*100)/100}
     res["res_our_pneumo"] = {"prob": math.floor(float(validate_ret["pneumonia"]["our"])*100)/100,
                              "vis_path": validate_ret["pneumonia"]["vis"],
+                             "vis_base64": validate_ret["pneumonia"]["vis_base64"],
                              "error": math.floor(abs(image_rows[0][2]-float(validate_ret["pneumonia"]["our"]))*100)/100}
     res["res_our_pleural"] = {"prob": math.floor(float(validate_ret["pleural"]["our"])*100)/100,
                               "vis_path": validate_ret["pleural"]["vis"],
+                              "vis_base64": validate_ret["pleural"]["vis_base64"],
                               "error": math.floor(abs(image_rows[0][3]-float(validate_ret["pleural"]["our"]))*100)/100}
     res["res_baseline_cardio"] = {
         "prob": math.floor(float(validate_ret["cardio"]["baseline"])*100)/100,
@@ -84,5 +88,5 @@ def save_report():
 
 
 if __name__ == "__main__":
-    # app.run(host="0.0.0.0", port=5000, debug=True)
     app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.run(host="127.0.0.1", port=5000, debug=True)

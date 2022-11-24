@@ -54,28 +54,38 @@ response:
 {
     "highlight": [str, str, str],
     "img_label": str,
+    "image_base64": str,
     "img_org_path": str,
     "pred_label": str/list
     "report": str,
     "res_our_cardio":{
+        error: float,
         prob:float,
-        path:str
+        vis_path:str,
+        vis_base64: str
     },
     "res_our_pneumo":{
+        error: float,
         prob:float,
-        path:str
+        vis_path:str,
+        vis_base64: str
     },
     "res_our_pleural":{
+        error: float,
         prob:float,
-        path:str
+        vis_path:str,
+        vis_base64: str
     },
     "res_baseline_cardio":{
+        error: float,
         prob:float
     },
     "res_baseline_pneumo":{
+        error: float,
         prob:float
     },
     "res_baseline_pleural":{
+        error: float,
         prob:float
     },
 }

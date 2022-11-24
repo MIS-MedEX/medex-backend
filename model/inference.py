@@ -1,11 +1,10 @@
-# from fnmatch import fnmatchcase
-# from platform import java_ver
 import torch
 import os
 import numpy as np
 import models
 import cv2
 import time
+import base64
 
 our_weight = [os.path.join(os.path.dirname(__file__), "weights", "cardiomegaly.pt"),
               os.path.join(os.path.dirname(__file__), "weights", "pneumonia.pt"), os.path.join(os.path.dirname(__file__), "weights", "pleural_effusion.pt")]
@@ -66,10 +65,11 @@ def preprocess(img_path):
     full_img = cv2.imread(img_path)
     full_img = cv2.cvtColor(full_img, cv2.COLOR_BGR2RGB)
     full_img = cv2.resize(full_img, (256, 256))
+    image_base64 = to_base64(full_img)
     full_img = np.transpose(full_img, (2, 0, 1))/255.0
     full_img = torch.from_numpy(full_img.copy()).float()
     full_img = full_img.unsqueeze(0)
-    return full_img
+    return full_img, image_base64
 
 
 def postprocess(img_path, mask, mask_type="None"):
@@ -86,13 +86,22 @@ def postprocess(img_path, mask, mask_type="None"):
     mask_path = os.path.join(db_root, "imgs", "{}".format(
         img_path.split("\\")[-1].split(".")[0]), "{}.jpg".format(mask_type))
     cv2.imwrite(mask_path, result)
-    return mask_path
+    result_base64 = to_base64(result)
+    return mask_path, result_base64
+
+
+def to_base64(img):
+    # im_arr: image in Numpy one-dim array format.
+    _, im_arr = cv2.imencode('.jpg', img)
+    im_b64 = base64.b64encode(im_arr).decode()
+    return im_b64
 
 
 def validate(img_path, masked_img_dir=None):
     # if not os.path.exists(masked_img_dir):
     #     os.makedirs(masked_img_dir)
-    test_image = preprocess(img_path).to(device)
+    test_image, image_base64 = preprocess(img_path)
+    test_image = test_image.to(device)
     print('Start validating')
     Cardio_Autoencoder.eval()
     Pneumonia_Autoencoder.eval()
@@ -128,12 +137,16 @@ def validate(img_path, masked_img_dir=None):
         cardio_baseline_pred = torch.squeeze(cardio_baseline_pred, 1)
         pneumo_baseline_pred = torch.squeeze(pneumo_baseline_pred, 1)
         pleural_baseline_pred = torch.squeeze(pleural_baseline_pred, 1)
-    cardio_vis_path = postprocess(img_path, cardio_mask, "cardio")
-    pneumonia_vis_path = postprocess(img_path, pneumonia_mask, "pneumonia")
-    pleural_vis_path = postprocess(img_path, pleural_mask, "pleural")
-    ret = {"cardio": {"our": cardio_task_pred.item(), "baseline": cardio_baseline_pred.item(), "vis": cardio_vis_path},
-           "pneumonia": {"our": pneumo_task_pred.item(), "baseline": pneumo_baseline_pred.item(), "vis": pneumonia_vis_path},
-           "pleural": {"our": pleural_task_pred.item(), "baseline": pleural_baseline_pred.item(), "vis": pleural_vis_path}}
+    cardio_vis_path, cardio_vis_base64 = postprocess(
+        img_path, cardio_mask, "cardio")
+    pneumonia_vis_path, pneumonia_vis_base64 = postprocess(
+        img_path, pneumonia_mask, "pneumonia")
+    pleural_vis_path, pleural_vis_base64 = postprocess(
+        img_path, pleural_mask, "pleural")
+    ret = {"image_base64": image_base64,
+           "cardio": {"our": cardio_task_pred.item(), "baseline": cardio_baseline_pred.item(), "vis": cardio_vis_path, "vis_base64": cardio_vis_base64},
+           "pneumonia": {"our": pneumo_task_pred.item(), "baseline": pneumo_baseline_pred.item(), "vis": pneumonia_vis_path, "vis_base64": pneumonia_vis_base64},
+           "pleural": {"our": pleural_task_pred.item(), "baseline": pleural_baseline_pred.item(), "vis": pleural_vis_path, "vis_base64": pleural_vis_base64}}
     print('Finished Validating')
     end_time = time.time()
     duration = end_time - start_time
