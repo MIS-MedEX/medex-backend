@@ -47,8 +47,14 @@ class Database:
         return rows
 
     def sql_update_report(self, patient_id, report, highlight, date, time):
-        sql = 'UPDATE Image SET Report="{}",Keyword="{}", Finish=1 WHERE (PatientID=? AND datetime(Date)=?);'.format(
-            report, highlight)
+        if highlight == "":
+            if report == "":
+                return "Not update report or highlight"
+            sql = 'UPDATE Image SET Report="{}", Finish=1 WHERE (PatientID=? AND datetime(Date)=?);'.format(
+                report)
+        else:
+            sql = 'UPDATE Image SET Report="{}",Keyword="{}", Finish=1 WHERE (PatientID=? AND datetime(Date)=?);'.format(
+                report, highlight)
         self.cursorObj.execute(sql, (patient_id, date+" "+time))
         self.con.commit()
         if self.cursorObj.rowcount == 1:
