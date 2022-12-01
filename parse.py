@@ -84,7 +84,5 @@ def parse_highlight(highlight):
     '''
     :param highlight: list of highlight
     '''
-    if highlight[0] == "" and len(highlight) == 1:
-        return ""
     highlight = "--".join(highlight)
     return highlight

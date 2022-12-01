@@ -47,6 +47,8 @@ class Database:
         return rows
 
     def sql_update_report(self, patient_id, report, highlight, date, time):
+        report = str(report)
+        highlight = str(highlight)
         if highlight == "":
             if report == "":
                 return "Not update report or highlight"
